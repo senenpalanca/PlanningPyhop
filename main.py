@@ -1,9 +1,38 @@
+import pyhop
+
 pyhop.declare_methods('move', move_iterative)
 
+def move_iterative(state,goal):
+    for who in goal.loc.keys():
+        x = state.loc[who]
+        y = goal.loc[who]
+        if x != y:
+            return [('travel_method',who,x,y), ('travel',goal)]
+    return []
 
 
 
+def mover_paqueteM1(state, paquete, ubicacion_paquete, destino):
+    return[('conseguir_camion', destino), ('conseguir_conductor', destino), ('cargar_paquete', paquete), ('conducir_al_destino', ubicacion_paquete, destino), ('descargar_paquete', paquete)]
 
+
+pyhop.declare_methods('mover_paquete', mover_paqueteM1)
+
+def ya_disponible(state, destino):
+    for truck in state.trucks.keys():
+        if state.trucks[truck] == destino:
+            return []
+        else: return False
+
+
+def mover_camion(state, destino):
+    for truck in state.trucks.keys():
+        ubicacion = state.trucks[truck]
+    return[('conseguir_conductor', ubicacion), ('conducir_al_destino', ubicacion, destino)]
+
+
+
+pyhop.declare_methods('conseguir_camion', ya_disponible, mover_camion)
 
 #INITIAL STATE
 
@@ -11,7 +40,7 @@ state1 = pyhop.State('state1')
 
 state1.connectionRoad = {'C0':{'C1', 'C2'}, 'C1':{'C0', 'C2'}, 'C2':{'C0', 'C2'}} 
 
-state1.connectionPath = {'P_01':{'C1','C2'}, P_12:{'C1', 'C2'}}
+state1.connectionPath = {'P_01':{'C1','C2'}, 'P_12':{'C1', 'C2'}}
 
 state1.packets = {'P1': 'C0', 'P2': 'C0'}
 
