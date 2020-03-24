@@ -13,7 +13,7 @@ def move_iterative(state,goal):
 
 
 def mover_paqueteM1(state, paquete, ubicacion_paquete, destino):
-    return[('conseguir_camion', destino), ('conseguir_conductor', destino), ('cargar_paquete', paquete), ('conducir_al_destino', ubicacion_paquete, destino), ('descargar_paquete', paquete)]
+    return[('conseguir_camion', ubicacion_paquete), ('conseguir_conductor', destino), ('cargar_paquete', paquete), ('conducir_al_destino', ubicacion_paquete, destino), ('descargar_paquete', paquete)]
 
 
 pyhop.declare_methods('mover_paquete', mover_paqueteM1)
@@ -30,9 +30,29 @@ def mover_camion(state, destino):
         ubicacion = state.trucks[truck]
     return[('conseguir_conductor', ubicacion), ('conducir_al_destino', ubicacion, destino)]
 
-
-
 pyhop.declare_methods('conseguir_camion', ya_disponible, mover_camion)
+
+def ya_presente(state, destino):
+    for driver in state.drivers.keys():
+        if state.drivers[driver] == destino:
+            return []
+        else: return False
+
+def desplazarse_carretera(state, destino):
+    for driver in state.drivers.keys():
+        ubicacionDriver = state.drivers[driver]
+        for truck in state.trucks.keys():
+            ubicacionTruck = state.trucks[truck]
+            if ubicacionDriver == ubicacionTruck:
+                return [('conducir_al_destino', ubicacionDriver, destino)]
+    return False
+
+def desplazarse_sendas(state, destino):
+    return [('moverse_por_sendas', destino)]
+
+pyhop.declare_methods('conseguir_conductor', ya_presente, desplazarse_carretera, desplazarse_sendas)
+
+def 
 
 #INITIAL STATE
 
